@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3 class="text-center">Task</h3>
+    <div class="card text-center my-2">
+        <div class="card-header">
+          <h5>{{task.title}}</h5>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">description: {{ task.description  }}</h5>
+          <h5 class="card-title"><strong>Status:</strong> {{ task.status }}</h5>
+          <h5 class="card-title"><strong>Type:</strong>
+            <ul>
+              {% for type in task.types.all %}
+                #{{ type.name }} <br>
+              {% endfor %}
+            </ul>
+          </h5>
+          <p class="card-text">created: {{ task.created_at }}</p>
+          
+            <div class="my-2">
+                <a href="{% url 'home' %}" class="btn btn-dark">Back</a>
+            </div>
+            <div class="mb-2" >
+              <a class="btn btn-warning" href="{% url 'tasks_update' id=task.id %}">Update</a>
+            </div>
+            <form action="{% url 'tasks_delete' id=task.id%}" method="post" onsubmit="return confirm('Delete?')">
+              {% csrf_token %}
+              <button class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+      </div>
+
+{% endblock %}

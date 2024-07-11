@@ -11,7 +11,7 @@ class TaskForm(forms.Form):
         )
     description = forms.CharField(
         max_length=3000,
-        required=True,
+        required=False,
         label='Description',
         widget=widgets.Textarea
         )

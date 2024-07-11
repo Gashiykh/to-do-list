@@ -1,0 +1,46 @@
+
+{% csrf_token %}
+<div class="text-center">
+    {% for error in form.non_field_errors  %}
+        <p class="text-danger"> {{ error }}</p>
+    {% endfor %}
+    <label>Action:</label><br>
+    <input type="text" name="title" value="{{task.title}}">
+    {% for error in form.title.errors %}
+        <p class="text-danger">{{ error }}</p>
+    {% endfor %}
+    <br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        {% for status in form.status.field.queryset %}
+            <option value="{{ status.id }}"
+            {% if status.id == task.status.id %}
+            selected{% endif %}>
+            {{ status.name }}
+            </option>
+        {% endfor %}
+    </select>
+    <br>
+
+    {{ form.types.label_tag }}
+    <div class="d-flex justify-content-center"> 
+    <br>
+    {{ form.types }}
+    <br>
+    </div>
+
+    <label>Description:</label><br>
+    <input type="text" name="description" value="{{task.description}}">
+    <br>
+    {% for error in form.description.errors %}
+        <p class="text-danger">{{ error }}</p>
+    {% endfor %}
+    <br>
+
+
+    <input type="submit" value="{{ btn_text|default:'Send'}}" class="btn btn-primary">
+    <br>
+</div>
+    
+ 

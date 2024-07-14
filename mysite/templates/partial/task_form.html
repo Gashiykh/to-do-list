@@ -1,46 +1,33 @@
+{% if not fields_only %}
+    <form action="{{ action_url|default:'' }}" method="{{ request_method| default:'get' }}">
+    {% csrf_token %}
+{% endif %}
 
-{% csrf_token %}
-<div class="text-center">
-    {% for error in form.non_field_errors  %}
-        <p class="text-danger"> {{ error }}</p>
-    {% endfor %}
-    <label>Action:</label><br>
-    <input type="text" name="title" value="{{task.title}}">
-    {% for error in form.title.errors %}
-        <p class="text-danger">{{ error }}</p>
-    {% endfor %}
-    <br>
+{% for error in form.non_field_errors %}
+    <div class="alert alert-danger">{{ error}}</div>
+{% endfor %}
 
-    <label>Status:</label><br>
-    <select name="status">
-        {% for status in form.status.field.queryset %}
-            <option value="{{ status.id }}"
-            {% if status.id == task.status.id %}
-            selected{% endif %}>
-            {{ status.name }}
-            </option>
-        {% endfor %}
-    </select>
-    <br>
-
-    {{ form.types.label_tag }}
-    <div class="d-flex justify-content-center"> 
-    <br>
-    {{ form.types }}
-    <br>
+{% for field in form %}
+    
+    <div class="d-flex justify-content-center">
+        <div class="mb-2">
+            {{ field.label }}
+            <br>
+            {{ field }}
+        </div>
     </div>
 
-    <label>Description:</label><br>
-    <input type="text" name="description" value="{{task.description}}">
-    <br>
-    {% for error in form.description.errors %}
-        <p class="text-danger">{{ error }}</p>
-    {% endfor %}
-    <br>
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">{{ error}}</div>
+        {% endfor %}
+    {% endif %}
 
+{% endfor %}
 
-    <input type="submit" value="{{ btn_text|default:'Send'}}" class="btn btn-primary">
-    <br>
-</div>
-    
- 
+{% if not fields_only %}
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-success">{{ btn_text|default:'Submit' }}</button>
+    </div>
+    </form>
+{% endif %}

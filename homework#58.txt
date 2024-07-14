@@ -1,0 +1,26 @@
+from django.db.models import Q  
+from webapp.models import Task, Status, Type  
+
+1.
+from django.utils import timezone   
+from datetime import datetime, timedelta
+
+now = timezone.now()
+last_month = now - timedelta(days=30)
+Task.objects.filter(status__name='done', updated_at__gte=last_month) 
+2.
+Task.objects.filter(Q(status__name__in=['done', 'new']) & Q(types__name__in=['task', 'bug']))
+
+3.
+Task.objects.filter(Q(title__icontains='bug') | (Q(types__name='bug') & ~Q(status__name='done')))
+
+Бонус
+1.
+Task.objects.all().values('id', 'title', 'status__name', 'types__name')
+2.
+from django.db.models import F
+Task.objects.filter(title=F('description'))
+3.
+Task.objects.filter(types__name='bug').count()
+Task.objects.filter(types__name='task').count()
+Task.objects.filter(types__name='enhacement').count()

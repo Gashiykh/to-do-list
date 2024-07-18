@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import widgets
-from webapp.models import Task, Status, Type
+from webapp.models import Task, Status, Type, Project
 from django.core import validators
 from django.utils.deconstruct import deconstructible
 
@@ -26,33 +26,7 @@ class MaxLengthValidator(validators.BaseValidator):
     def clean(self, value):
         return len(value)
 
-class TaskFormOld(forms.Form):
-    title = forms.CharField(
-        max_length=100,
-        required=True,
-        label='Action',
-        validators=[
-            MinLengthValidator(10),
-            MaxLengthValidator(50),
-        ],
-    )
-    description = forms.CharField(
-        max_length=3000,
-        required=False,
-        label='Description',
-        widget=widgets.Textarea
-    )
-    status = forms.ModelChoiceField(
-        queryset=Status.objects.all(),
-        required=True,
-        label='Status'
-    )
-    types = forms.ModelMultipleChoiceField(
-        queryset=Type.objects.all(),
-        required=True,
-        label='Type',
-        widget=widgets.CheckboxSelectMultiple
-    )
+
 
 
 class TaskForm(forms.ModelForm):
@@ -67,6 +41,21 @@ class TaskForm(forms.ModelForm):
     )
 
 
+
     class Meta:
         model = Task
         fields = ['title', 'description', 'status', 'types']
+        exclude = ['is_deleted']
+        widgets = {
+            'types': forms.CheckboxSelectMultiple,
+        }
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['title', 'description', 'started_at', 'ended_at']
+
+    
+class SearchForm(forms.Form):
+    search = forms.CharField(max_length=100, required=False, label='Search')
+

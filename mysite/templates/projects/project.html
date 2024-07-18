@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 class="text-center"> Create Project </h1>
+
+    {% include 'partial/task_form.html' with request_method='post' %}
+
+{% endblock %}

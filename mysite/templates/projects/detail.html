@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card text-center">
+        <div class="card-header">
+        My project
+        </div>
+        <div class="card-body">
+        <h5 class="card-title">Название: {{ project.title }}</h5>
+        <p class="card-text"><strong>Описание: <br> {{ project.description }}</strong> </p>
+        <a href="{% url 'projects' %}" class="btn btn-primary">Back</a>
+        </div>
+    </div>
+
+    <h3 class="text-center">Tasks</h3>
+    {% url 'tasks_create' project_id=project.id as projects_action_url %}
+    {% include 'partial/task_form.html' with form=projects_form request_method='post' action_url=projects_action_url btn_text='Create Task' %}
+    {% for task in tasks %}
+        <div class="card my-3 text-center">
+            <div class="card-header">
+            <h5>{{ task.title }}</h5>
+            </div>
+            <div class="card-body">
+            <p class="card-text">{{ task.created_at }}</p>
+            <a href="{% url 'tasks_detail' id=task.id %}" class="btn btn-primary">More >></a>
+            </div> 
+        </div>
+    {% empty %}
+        <div class="d-flex justify-content-center">
+            <p>Задачи не найдены.</p>
+        </div>
+    {% endfor %}
+    
+    <div class="d-flex justify-content-center">
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
+
+    {% if is_paginated %}
+      {% include 'partial/pagination.html' %}
+    {% endif %}
+
+{% endblock %}

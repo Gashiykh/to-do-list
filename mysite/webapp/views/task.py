@@ -2,12 +2,13 @@ from typing import Any
 from urllib.parse import urlencode
 from django.http import Http404, HttpResponseRedirect
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
-from webapp.models import Task, Project
+from webapp.models import Task
 from webapp.forms import TaskForm, SearchForm
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class IndexView(generic.ListView):
@@ -67,7 +68,7 @@ class TaskDetailView(generic.DetailView):
         return obj
     
 
-class TaskCreateView(generic.CreateView):
+class TaskCreateView(LoginRequiredMixin, generic.CreateView):
 
     template_name = 'tasks/task.html'
     form_class = TaskForm
@@ -84,7 +85,7 @@ class TaskCreateView(generic.CreateView):
         return redirect('projects_detail', id=project_id)
 
 
-class TaskUpdateView(generic.UpdateView):
+class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
         
     template_name = 'tasks/task.html'
     form_class = TaskForm
@@ -95,7 +96,7 @@ class TaskUpdateView(generic.UpdateView):
     def get_success_url(self):
         return reverse('projects_detail', kwargs={'id': self.object.project.id})
  
-class TaskDeleteView(generic.DeleteView):
+class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Task
     pk_url_kwarg = 'id'
     

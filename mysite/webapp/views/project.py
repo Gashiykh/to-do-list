@@ -13,7 +13,7 @@ class ProjectListView(generic.ListView):
     ordering = ['-started_at']
 
 
-class ProjectDetailView(generic.DeleteView):
+class ProjectDetailView(generic.DetailView):
     template_name = 'projects/detail.html'
     model = Project
     pk_url_kwarg = 'id'

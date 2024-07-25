@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views import generic
 from webapp.models import Project
 from webapp.forms import ProjectForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProjectListView(generic.ListView):
@@ -25,7 +26,7 @@ class ProjectDetailView(generic.DeleteView):
         return context
     
 
-class ProjectCreateView(generic.CreateView):
+class ProjectCreateView(LoginRequiredMixin, generic.CreateView):
     template_name = 'projects/project.html'
     model = Project
     form_class = ProjectForm 

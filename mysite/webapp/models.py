@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 
@@ -45,7 +46,16 @@ class Project(models.Model):
     description = models.TextField(max_length=500, verbose_name='Описание проекта')
     started_at = models.DateField(verbose_name='Дата начала') 
     ended_at = models.DateField(null=True, blank=True, verbose_name='Дата окончания')
+    user = models.ManyToManyField(get_user_model(),  related_name='projects', verbose_name='Пользователь', through='webapp.ProjectUser')
 
     def __str__(self) -> str:
         return self.title
+    
 
+class ProjectUser(models.Model):
+    project = models.ForeignKey('webapp.Project', on_delete=models.CASCADE, related_name='project_users', verbose_name='Проект')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_projects', verbose_name='Пользователь')
+
+    def __str__(self) -> str:
+        return f'{self.user} {self.project}'
+    

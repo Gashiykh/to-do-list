@@ -6,11 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap.min.css'%}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     
     <title>Document</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-warning-subtle">
         <div class="container">
           <a class="navbar-brand" href="{% url 'projects' %}">TO-DO list</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,18 +25,6 @@
           </button>
           <div class="collapse navbar-collapse flex-grow-0" id="navbarNav">
             <ul class="navbar-nav">
-              {% if user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link">Hi {{user.username}}!</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                </li>
-              {% else %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'login' %}">Login</a>
-                </li>
-              {% endif %}
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'home' %}">All Tasks</a>
               </li>
@@ -38,6 +33,28 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'projects_create' %}">Create Project</a>
+              </li>
+              <li class="nav-item dropdown">
+                {% if user.is_authenticated %}
+                  <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{user.username}}
+                  </a>
+                {% else %}
+                  <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Profile
+                  </a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}?next={{request.get_full_path}}">Logout</a></li>
+                  </ul>
+                {% else %}
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                    <li><a class="dropdown-item" href="{% url 'register' %}">Register</a></li>
+                  </ul>
+                {% endif %}
               </li>
             </ul>
             <form class="d-flex">
@@ -54,6 +71,8 @@
         {% endblock %}
       </div>
 
-      
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+    <script src="{% static 'js/bs.js' %}"></script>
 </body>
 </html>

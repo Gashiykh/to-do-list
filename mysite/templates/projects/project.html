@@ -2,8 +2,8 @@
 
 {% block content %}
 
-    <h1 class="text-center"> Create Project </h1>
-
-    {% include 'partial/task_form.html' with request_method='post' %}
-
+    <h1 class="text-center">{{ title|default:'Create Project'}} </h1>
+    <div class="border border-2 border-dark w-50 container bg-info">
+    {% include 'partial/task_form.html' with request_method='post' btn_text=btn %}
+    </div>  
 {% endblock %}

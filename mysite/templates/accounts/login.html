@@ -1,14 +1,10 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container d-flex justify-content-center bg-info p-3 w-50 mt-5">
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+        <h3 class="text-center mt-5">Log in</h3><br>
+    </div>
+    <div class="container d-flex justify-content-center bg-info p-3 w-50 border border-black border-2">
         <form action="" method="post" class="text-center">
             {% csrf_token %}
             <div class="mb-3 form-group">
@@ -25,5 +21,4 @@
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

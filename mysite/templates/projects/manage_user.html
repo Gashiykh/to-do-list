@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row mt-4">
+
+        <div class="col-6 text-center">
+            <h2>Add user for "{{ project.title }}"</h2>
+            {% include 'partial/task_form.html' with request_method='post' btn_text='Add' %}
+        </div>
+
+        <div class="col-6">
+            <h2>Remove User from Project: "{{ project.title }}"</h2>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">User</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in project.user.all %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        <form action="{% url 'delete_user' project_id=project.id user_id=user.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+              {% empty %}
+                <tr>
+                    <td colspan="3">No users found.</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>  
+<a href="{% url 'projects_detail' id=project.id %}" class="btn btn-primary">Back to Project</a>
+{% endblock %}

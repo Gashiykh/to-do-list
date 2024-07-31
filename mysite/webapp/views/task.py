@@ -1,14 +1,14 @@
-from typing import Any
 from urllib.parse import urlencode
 from django.http import Http404, HttpResponseRedirect
 from django.http.response import HttpResponse as HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views import generic
-from webapp.models import Task
+from webapp.models import Task, Project, ProjectUser
 from webapp.forms import TaskForm, SearchForm
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 
 class IndexView(generic.ListView):
@@ -16,7 +16,7 @@ class IndexView(generic.ListView):
     model = Task
     context_object_name = 'tasks'
     ordering = ['-created_at']
-    paginate_by = 10
+    paginate_by = 9
 
     
 
@@ -68,11 +68,16 @@ class TaskDetailView(generic.DetailView):
         return obj
     
 
-class TaskCreateView(LoginRequiredMixin, generic.CreateView):
+class TaskCreateView(PermissionRequiredMixin, generic.CreateView):
 
     template_name = 'tasks/task.html'
     form_class = TaskForm
     model = Task
+    permission_required = 'webapp.add_task'
+
+    def has_permission(self):
+        project = get_object_or_404(Project, id=self.kwargs['project_id'])
+        return super().has_permission() and ProjectUser.objects.filter(project=project, user=self.request.user).exists()
 
     def form_valid(self, form):
         project_id = self.kwargs.get('project_id')
@@ -85,20 +90,32 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
         return redirect('projects_detail', id=project_id)
 
 
-class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
+class TaskUpdateView(PermissionRequiredMixin, generic.UpdateView):
         
     template_name = 'tasks/task.html'
     form_class = TaskForm
     model = Task
     context_key = 'task'
     pk_url_kwarg = 'id'
+    permission_required = 'webapp.change_task'
+
+    def has_permission(self):
+        task = get_object_or_404(Task, id=self.kwargs['id'])
+        project = task.project
+        return super().has_permission() and ProjectUser.objects.filter(project=project, user=self.request.user).exists()
 
     def get_success_url(self):
         return reverse('projects_detail', kwargs={'id': self.object.project.id})
  
-class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
+class TaskDeleteView(PermissionRequiredMixin, generic.DeleteView):
     model = Task
     pk_url_kwarg = 'id'
+    permission_required = 'webapp.delete_task'
+
+    def has_permission(self) -> bool:
+        task = get_object_or_404(Task, id=self.kwargs['id'])
+        project = task.project
+        return super().has_permission() and ProjectUser.objects.filter(project=project, user=self.request.user).exists()
     
     def get_success_url(self):
         return reverse('projects_detail', kwargs={'id': self.object.project.id})

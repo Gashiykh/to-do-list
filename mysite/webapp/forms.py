@@ -1,8 +1,11 @@
-from django import forms
-from django.forms import widgets
-from webapp.models import Task, Status, Type, Project
 from django.core import validators
 from django.utils.deconstruct import deconstructible
+from django import forms
+from django.forms import widgets
+from django.contrib.auth import get_user_model
+
+from webapp.models import Task, Project, ProjectUser
+
 
 
 @deconstructible
@@ -53,9 +56,17 @@ class TaskForm(forms.ModelForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'description', 'started_at', 'ended_at']
+        fields = ['title', 'description', 'started_at', 'ended_at']    
 
     
 class SearchForm(forms.Form):
     search = forms.CharField(max_length=100, required=False, label='Search')
 
+
+class ProjectUserForm(forms.ModelForm):
+    user = forms.ModelChoiceField(queryset=get_user_model().objects.all(), label='Пользователь')
+
+    class Meta:
+        model = ProjectUser
+        fields = ['user']
+    

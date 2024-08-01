@@ -11,6 +11,8 @@ urlpatterns = [
             ), name='login'
         ),
     path('logout', django_views.LogoutView.as_view(), name='logout'),
-    path('register', views.RegisterView.as_view(), name='register')
+    path('register', views.RegisterView.as_view(), name='register'),
+    path('profile/<int:id>', views.UserProfileView.as_view(), name='profile'),
+    path('users', views.UserListView.as_view(), name='users_list')
 
 ]

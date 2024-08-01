@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class=" mt-5">
+    {% for user_obj in user_objs %}
+    <div class="d-flex justify-content-between mt-2 border border-2 border-black p-3">
+        <div>
+            <h5>{{ user_obj.username }}</h5>
+        </div>  
+        <div>
+            <a class="btn btn-success" href="{% url 'profile' id=user_obj.id %}">Profile</a>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+{% endblock %}

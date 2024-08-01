@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="d-flex justify-content-center">
+        <div>
+            <h1>Profile {{ user_obj.get_full_name }}</h1> 
+        </div>
+    </div>
+
+    <div class="row text-center mt-5">
+        <div class="col-6">
+            {% if user_obj.profile.avatar %}
+                <img src="{{ user_obj.profile.avatar.url }}" alt="avatar" width="300" height="300">
+            {% endif %}
+        </div>
+        <div class="col-6">
+            <p class="mt-5">Nickname: {{ user_obj.username }}</p>
+            <p>First Name: {{ user_obj.first_name }}</p>
+            <p>Last Name: {{ user_obj.last_name }}</p>
+            <p>Git: <a href="{{ user_obj.profile.git_link }}">Link</a></p>
+            <p>About me: {{ user_obj.profile.description }}</p>
+        </div>
+    </div>
+
+
+    <h3 class="text-center mt-3" >{{ user_obj.get_full_name}}'s projects</h3>
+    {% include 'projects/form_list.html' %}
+
+{% endblock %}
